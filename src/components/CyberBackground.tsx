@@ -1,4 +1,6 @@
 import { useEffect, useRef } from 'react';
+import cbitBg from '../assets/cbit_bg.jpg.png';
+
 
 const CyberBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -65,13 +67,14 @@ const CyberBackground = () => {
       <div 
         className="fixed inset-0 z-0"
         style={{
-          backgroundImage: "url('/images/cbit_bg.jpg.png')",
-          backgroundSize: 'cover',
-          backgroundPosition: 'center center',
-          backgroundRepeat: 'no-repeat',
-          opacity: 0.7, // Higher opacity to make your Canva design more prominent
-          zIndex: 0
+            backgroundImage: `url(${cbitBg})`,
+            backgroundSize: 'cover',
+            backgroundPosition: 'center center',
+            backgroundRepeat: 'no-repeat',
+            opacity: 0.7,
+            zIndex: 0
         }}
+
       />
       
       {/* Matrix Rain Canvas - Reduced opacity to not overpower the background */}
