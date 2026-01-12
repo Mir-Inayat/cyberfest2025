@@ -19,13 +19,9 @@ const CTFSection = () => {
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   return (
-    <section id="ctf" className="relative py-24 bg-gradient-to-b from-background via-muted/5 to-background overflow-hidden">
+    <section id="ctf" className="relative py-24 overflow-hidden">
       {/* Terminal Background Effect */}
-      <div className="absolute inset-0 opacity-5">
-        <div className="font-mono-tech text-[8px] leading-tight text-secondary overflow-hidden h-full">
-          {Array(50).fill('>>> SCANNING TARGETS... VULNERABILITY DETECTED... EXPLOITING... ACCESS GRANTED... ').join('')}
-        </div>
-      </div>
+      
 
       <div className="container mx-auto px-4 relative z-10" ref={ref}>
         {/* Section Header */}

@@ -16,8 +16,6 @@ const AboutSection = () => {
 
   return (
     <section id="about" className="relative py-24 overflow-hidden">
-      <div className="absolute inset-0 hex-pattern opacity-50" />
-      
       <div className="container mx-auto px-4 relative z-10" ref={ref}>
         {/* Section Header */}
         <motion.div

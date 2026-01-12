@@ -15,9 +15,6 @@ const VenueSection = () => {
 
   return (
     <section id="venue" className="relative py-24 overflow-hidden">
-      {/* Background Effect */}
-      <div className="absolute inset-0 hex-pattern opacity-30" />
-      
       <div className="container mx-auto px-4 relative z-10" ref={ref}>
         {/* Section Header */}
         <motion.div

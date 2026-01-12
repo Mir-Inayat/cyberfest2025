@@ -17,7 +17,7 @@ const EventDetailsSection = () => {
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   return (
-    <section id="events" className="relative py-24 bg-gradient-to-b from-background via-muted/10 to-background">
+    <section id="events" className="relative py-24">
       <div className="container mx-auto px-4" ref={ref}>
         {/* Section Header */}
         <motion.div

@@ -48,7 +48,7 @@ const ScheduleSection = () => {
   const isInView = useInView(ref, { once: true, margin: '-100px' });
 
   return (
-    <section id="schedule" className="relative py-24 bg-gradient-to-b from-background via-muted/5 to-background">
+    <section id="schedule" className="relative py-24">
       <div className="container mx-auto px-4" ref={ref}>
         {/* Section Header */}
         <motion.div

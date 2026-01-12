@@ -17,13 +17,6 @@ const scrollToSchedule = () => {
 const HeroSection = () => {
   return (
     <section id="home" className="relative min-h-[100svh] flex items-center justify-center overflow-hidden py-10 sm:py-12 md:py-16">
-      {/* Animated Background Elements */}
-      <div className="absolute inset-0 cyber-grid hex-pattern" />
-      
-      {/* Glowing Orbs */}
-      <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-3xl animate-pulse" />
-      <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-accent/20 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
-
       <div className="container mx-auto px-4 relative z-10">
         <div className="relative -translate-y-4 sm:-translate-y-6 md:-translate-y-10 flex flex-col items-center text-center bg-black/30 backdrop-blur-sm border border-white/10 rounded-3xl p-6 sm:p-8 md:p-10 shadow-2xl max-w-5xl mx-auto">
           {/* Main Logo */}

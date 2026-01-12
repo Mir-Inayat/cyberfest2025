@@ -12,10 +12,7 @@ const socialLinks = [
 
 const Footer = () => {
   return (
-    <footer className="relative pt-16 pb-8 border-t border-primary/20">
-      {/* Background Effect */}
-      <div className="absolute inset-0 hex-pattern opacity-20" />
-      
+    <footer className="relative pt-16 pb-8 bg-background/80 backdrop-blur-lg border-t border-border/50">
       <div className="container mx-auto px-4 relative z-10">
         {/* Main Footer Content */}
         <div className="grid md:grid-cols-3 gap-12 mb-12">
