@@ -51,7 +51,7 @@ const Footer = () => {
             <h4 className="font-orbitron text-lg font-bold mb-6 text-primary">Contact</h4>
             <div className="space-y-4">
               <p className="font-rajdhani text-foreground/70">
-                <span className="font-semibold text-foreground">Organized by:</span><br />
+                <span className="font-semibold text-foreground">Organized by</span><br />
                 Digital Defence Club (DDC), CBIT
               </p>
               <a
@@ -62,20 +62,75 @@ const Footer = () => {
                 ddc@cbit.ac.in
               </a>
 
-              {/* DDC Team               <div className="space-y-3 pt-2">
-                <div className="font-rajdhani text-sm text-foreground/80 flex flex-col">
-                  <span className="font-semibold">Pradeep (DDC President):</span>
-                  <a href="tel:+918184889557" className="text-primary hover:text-secondary transition-colors">+91 81848 89557</a>
+              <div className="pt-2">
+                <h5 className="font-orbitron text-sm font-semibold text-foreground/80 mb-3">Contacts</h5>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  <div className="rounded-lg border border-border/50 bg-muted/20 px-4 py-3">
+                    <div className="flex flex-col gap-1">
+                      <div className="font-rajdhani text-sm font-semibold text-foreground whitespace-normal break-words">
+                        Ms. P. Kiranmaie
+                      </div>
+                      <div className="font-rajdhani text-xs text-foreground/70">Faculty Coordinator</div>
+                      <a
+                        href="tel:+919032315262"
+                        className="mt-1 font-mono-tech text-sm text-primary hover:text-secondary transition-colors"
+                        aria-label="Call Ms. P. Kiranmaie"
+                      >
+                        +91 90323 15262
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="rounded-lg border border-border/50 bg-muted/20 px-4 py-3">
+                    <div className="flex flex-col gap-1">
+                      <div className="font-rajdhani text-sm font-semibold text-foreground whitespace-normal break-words">
+                        Ms. Kavita Agrawal
+                      </div>
+                      <div className="font-rajdhani text-xs text-foreground/70">Faculty Coordinator</div>
+                      <a
+                        href="tel:+919032315262"
+                        className="mt-1 font-mono-tech text-sm text-primary hover:text-secondary transition-colors"
+                        aria-label="Call Ms. Kavita Agrawal"
+                      >
+                        +91 90323 15262
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="rounded-lg border border-border/50 bg-muted/20 px-4 py-3">
+                    <div className="flex flex-col gap-1">
+                      <div className="font-rajdhani text-sm font-semibold text-foreground whitespace-normal break-words">
+                        Pradeep Majji
+                      </div>
+                      <div className="font-rajdhani text-xs text-foreground/70">President</div>
+                      <a
+                        href="tel:+918184889557"
+                        className="mt-1 font-mono-tech text-sm text-primary hover:text-secondary transition-colors"
+                        aria-label="Call Pradeep Majji"
+                      >
+                        +91 81848 89557
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="rounded-lg border border-border/50 bg-muted/20 px-4 py-3">
+                    <div className="flex flex-col gap-1">
+                      <div className="font-rajdhani text-sm font-semibold text-foreground whitespace-normal break-words">
+                        Sai Madhav
+                      </div>
+                      <div className="font-rajdhani text-xs text-foreground/70">Executive Board Head</div>
+                      <a
+                        href="tel:+918309435613"
+                        className="mt-1 font-mono-tech text-sm text-primary hover:text-secondary transition-colors"
+                        aria-label="Call Sai Madhav"
+                      >
+                        +91 83094 35613
+                      </a>
+                    </div>
+                  </div>
                 </div>
-                <div className="font-rajdhani text-sm text-foreground/80 flex flex-col">
-                  <span className="font-semibold">Vasanthadithya (DDC Vice-President):</span>
-                  <a href="tel:+916305262894" className="text-primary hover:text-secondary transition-colors">+91 6305262894</a>
-                </div>
-                <div className="font-rajdhani text-sm text-foreground/80 flex flex-col">
-                  <span className="font-semibold">Sai Madhav (DDC EB Head):</span>
-                  <a href="tel:+918309435613" className="text-primary hover:text-secondary transition-colors">+91 83094 35613</a>
-                </div>
-              </div> Links */}
+              </div>
+
               <div className="flex items-center gap-4 pt-4">
                 {socialLinks.map((social) => (
                   <motion.a
