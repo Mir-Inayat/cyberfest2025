@@ -1,16 +1,14 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import Marquee from './Marquee';
-
 
 const sponsors = [
   { name: 'Infinitra Innovations', logo: '/infinitra.jpeg' },
   { name: 'Student Tribe', logo: '/redlogo.webp' },
   { name: 'Unstop', logo: '/unstop-logo.svg' },
   { name: 'Devnovate', logo: '/DEVNOVATE.svg' },
-  { name: 'Red Bull', logo: '/redbull.jpeg' },
-  {name:'Cyber Mind Space', logo:'/cybermindspace.png' }
+  { name: 'RedBull', logo: '/redbull.jpeg' },
+  { name: 'CyberMindSpace', logo: '/CyberMindSpacelogo.webp' },
 ];
 
 const SponsorsSection = () => {
@@ -36,32 +34,109 @@ const SponsorsSection = () => {
           </p>
         </motion.div>
 
-        {/* Animated Sponsors Marquee */}
-        <div className="max-w-6xl mx-auto py-6">
-          <Marquee speed={18} pauseOnHover={true}>
-            {sponsors.map((sponsor) => (
-              <motion.div
-                key={sponsor.name}
-                className="rounded-2xl p-6 flex items-center justify-center border border-primary/30 bg-background/40 backdrop-blur-md hover:border-primary/70 hover:shadow-[0_0_20px_rgba(0,71,171,0.25)] transition-all duration-300 group min-h-[160px] w-[220px] mx-3"
-              >
-                <div className="text-center">
-                  <div className="w-28 h-28 mx-auto mb-3 rounded-xl bg-muted/20 flex items-center justify-center border border-primary/20 group-hover:border-primary/60 transition-colors">
-                    {sponsor.logo ? (
-                      <img
-                        src={sponsor.logo}
-                        alt={sponsor.name}
-                        className="max-w-full max-h-full object-contain p-1"
-                      />
-                    ) : (
-                      <span className="font-mono-tech text-xs text-muted-foreground text-center">LOGO</span>
-                    )}
+        {/* Infinite Scroll Carousel */}
+        <div className="max-w-6xl mx-auto py-8 overflow-hidden">
+          <div className="sponsors-carousel">
+            <div className="sponsors-track">
+              {/* First set of sponsors */}
+              {sponsors.map((sponsor, index) => (
+                <div
+                  key={`sponsor-1-${index}`}
+                  className="sponsor-item cyber-card rounded-xl p-10 flex items-center justify-center border border-primary/50 hover:shadow-[0_0_30px_rgba(0,240,255,0.2)] transition-all duration-300 group min-h-[180px] w-[220px]"
+                >
+                  <div className="text-center">
+                    <div className="w-32 h-32 mx-auto mb-3 rounded-lg bg-muted/30 flex items-center justify-center border border-dashed border-muted-foreground/30 group-hover:border-primary/50 transition-colors">
+                      {sponsor.logo ? (
+                        <img
+                          src={sponsor.logo}
+                          alt={sponsor.name}
+                          className="max-w-full max-h-full object-contain p-0"
+                        />
+                      ) : (
+                        <span className="font-mono-tech text-xs text-muted-foreground text-center">LOGO</span>
+                      )}
+                    </div>
+                    <p className="font-rajdhani text-sm text-foreground/60">{sponsor.name}</p>
                   </div>
-                  <p className="font-rajdhani text-sm text-foreground/70">{sponsor.name}</p>
                 </div>
-              </motion.div>
-            ))}
-          </Marquee>
+              ))}
+              {/* Duplicate set for seamless loop */}
+              {sponsors.map((sponsor, index) => (
+                <div
+                  key={`sponsor-2-${index}`}
+                  className="sponsor-item cyber-card rounded-xl p-10 flex items-center justify-center border border-primary/50 hover:shadow-[0_0_30px_rgba(0,240,255,0.2)] transition-all duration-300 group min-h-[180px] w-[220px]"
+                >
+                  <div className="text-center">
+                    <div className="w-32 h-32 mx-auto mb-3 rounded-lg bg-muted/30 flex items-center justify-center border border-dashed border-muted-foreground/30 group-hover:border-primary/50 transition-colors">
+                      {sponsor.logo ? (
+                        <img
+                          src={sponsor.logo}
+                          alt={sponsor.name}
+                          className="max-w-full max-h-full object-contain p-0"
+                        />
+                      ) : (
+                        <span className="font-mono-tech text-xs text-muted-foreground text-center">LOGO</span>
+                      )}
+                    </div>
+                    <p className="font-rajdhani text-sm text-foreground/60">{sponsor.name}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
+
+        <style jsx>{`
+          .sponsors-carousel {
+            position: relative;
+            width: 100%;
+            overflow: hidden;
+            mask-image: linear-gradient(
+              to right,
+              transparent,
+              black 10%,
+              black 90%,
+              transparent
+            );
+            -webkit-mask-image: linear-gradient(
+              to right,
+              transparent,
+              black 10%,
+              black 90%,
+              transparent
+            );
+          }
+
+          .sponsors-track {
+            display: flex;
+            gap: 2rem;
+            animation: scroll 30s linear infinite;
+            width: fit-content;
+          }
+
+          .sponsors-track:hover {
+            animation-play-state: paused;
+          }
+
+          .sponsor-item {
+            flex-shrink: 0;
+          }
+
+          @keyframes scroll {
+            0% {
+              transform: translateX(0);
+            }
+            100% {
+              transform: translateX(calc(-220px * ${sponsors.length} - 2rem * ${sponsors.length}));
+            }
+          }
+
+          @media (max-width: 768px) {
+            .sponsors-track {
+              animation-duration: 20s;
+            }
+          }
+        `}</style>
 
         {/* Become a Sponsor CTA */}
         <motion.div

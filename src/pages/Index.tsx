@@ -53,8 +53,8 @@ const Index = () => {
         <ExpertSessionsSection />
         <ScheduleSection />
         <VenueSection />
-        <SponsorsSection />
         <FAQSection />
+        <SponsorsSection />
       </main>
 
       {/* Registration Dialog */}

@@ -10,6 +10,8 @@ const navItems = [
   { name: 'Events', href: '#events' },
   { name: 'Schedule', href: '#schedule' },
   { name: 'Venue', href: '#venue' },
+  { name: 'FAQ', href: '#faq' },
+  { name: 'Sponsors', href: '#sponsors' },
 ];
 
 interface NavbarProps {

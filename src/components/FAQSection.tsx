@@ -114,6 +114,7 @@ const FAQSection = () => {
           </Accordion>
         </motion.div>
 
+        
       </div>
     </section>
   );
