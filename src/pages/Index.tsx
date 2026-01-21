@@ -33,16 +33,20 @@ const Index = () => {
   return (
     <div className="relative min-h-screen bg-background text-foreground overflow-x-hidden">
       <div className="fixed inset-0 z-0 pointer-events-none">
-        <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-          <Plasma
-            color="#0047ab"
-            speed={isMobile ? 0.8 : 2}
-            direction="forward"
-            scale={isMobile ? 0.95 : 1.1}
-            opacity={isMobile ? 0.5 : 0.8}
-            mouseInteractive={!isMobile}
-          />
-        </div>
+        {isMobile ? (
+          <div className="w-full h-full bg-[radial-gradient(circle_at_15%_25%,rgba(0,71,171,0.35),transparent_45%),radial-gradient(circle_at_85%_15%,rgba(0,41,120,0.35),transparent_40%),linear-gradient(180deg,#050816_0%,#000814_60%,#050816_100%)]" />
+        ) : (
+          <div style={{ width: '100%', height: '100%', position: 'relative' }}>
+            <Plasma
+              color="#0047ab"
+              speed={2}
+              direction="forward"
+              scale={1.1}
+              opacity={0.8}
+              mouseInteractive={true}
+            />
+          </div>
+        )}
       </div>
       {/* Intro Video - Hidden on mobile */}
       {!introVideoEnded && !isMobile && (
