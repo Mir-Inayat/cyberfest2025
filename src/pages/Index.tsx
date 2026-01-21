@@ -1,4 +1,4 @@
-import { useState, useCallback } from 'react';
+import { useState } from 'react';
 import Navbar from '@/components/Navbar';
 import HeroSection from '@/components/HeroSection';
 import AboutSection from '@/components/AboutSection';
@@ -13,22 +13,12 @@ import FAQSection from '@/components/FAQSection';
 import Footer from '@/components/Footer';
 import RegistrationDialog from '@/components/RegistrationDialog';
 // import CyberBackground from '@/components/CyberBackground';
-import IntroVideo from '@/components/video/IntroVideo';
 import Plasma from '@/components/Plasma';
 import { useIsMobile } from '@/hooks/use-mobile';
 
 const Index = () => {
-  const [introVideoEnded, setIntroVideoEnded] = useState(false);
-  const [isFading, setIsFading] = useState(false);
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
   const isMobile = useIsMobile();
-
-  const handleVideoEnd = useCallback(() => {
-    setIsFading(true);
-    setTimeout(() => {
-      setIntroVideoEnded(true);
-    }, 1000);
-  }, []);
 
   return (
     <div className="relative min-h-screen bg-background text-foreground overflow-x-hidden">
@@ -49,18 +39,8 @@ const Index = () => {
           </div>
         )}
       </div>
-      {/* Intro Video - Hidden on mobile */}
-      {!introVideoEnded && !isMobile && (
-        <div className={`fixed inset-0 z-50 transition-opacity duration-1000 ease-in-out ${isFading ? 'opacity-0' : 'opacity-100'}`}>
-          <IntroVideo
-            videoSrc={"/intro-video.mp4"}
-            onVideoEnd={handleVideoEnd}
-          />
-        </div>
-      )}
-
       {/* Navigation */}
-      <Navbar showAfterIntro={introVideoEnded || isMobile} />
+      <Navbar showAfterIntro={true} />
 
       {/* Main Content */}
       <main className="relative z-10">

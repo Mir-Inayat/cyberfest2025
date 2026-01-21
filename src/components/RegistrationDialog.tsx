@@ -429,7 +429,7 @@ const DetailsForm = ({
 }) => {
   const [errors, setErrors] = useState<{
     teamName?: string;
-    members: Array<{ email?: string; phoneNumber?: string }>;
+    members: Array<{ email?: string; phoneNumber?: string; rollNumber?: string }>;
   }>({
     members: teamMembers.map(() => ({})),
   });
@@ -444,7 +444,11 @@ const DetailsForm = ({
   const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
   const validatePhone = (phone: string) => /^\d{10}$/.test(phone.replace(/\D/g, ''));
 
-  const setMemberError = (index: number, field: 'email' | 'phoneNumber', message?: string) => {
+  const setMemberError = (
+    index: number,
+    field: 'email' | 'phoneNumber' | 'rollNumber',
+    message?: string,
+  ) => {
     setErrors((prev) => ({
       ...prev,
       members: prev.members.map((memberErrors, i) =>
@@ -454,19 +458,46 @@ const DetailsForm = ({
   };
 
   const handleNext = () => {
+    const normalizedEmails = teamMembers.map((m) => m.email.trim().toLowerCase()).filter(Boolean);
+    const normalizedPhones = teamMembers
+      .map((m) => m.phoneNumber.replace(/\D/g, ''))
+      .filter(Boolean);
+    const normalizedRolls = teamMembers.map((m) => m.rollNumber.trim().toLowerCase()).filter(Boolean);
+
     const nextErrors = {
       teamName: teamName.trim() ? undefined : 'Team name is required.',
-      members: teamMembers.map((member) => ({
-        email: member.email && validateEmail(member.email) ? undefined : 'Enter a valid email address.',
-        phoneNumber: member.phoneNumber && validatePhone(member.phoneNumber)
-          ? undefined
-          : 'Enter a valid 10-digit phone number.',
-      })),
+      members: teamMembers.map((member, index) => {
+        const email = member.email.trim().toLowerCase();
+        const phone = member.phoneNumber.replace(/\D/g, '');
+        const roll = member.rollNumber.trim().toLowerCase();
+
+        const emailDuplicate = email && normalizedEmails.filter((e) => e === email).length > 1;
+        const phoneDuplicate = phone && normalizedPhones.filter((p) => p === phone).length > 1;
+        const rollDuplicate = roll && normalizedRolls.filter((r) => r === roll).length > 1;
+
+        return {
+          email:
+            email && validateEmail(email)
+              ? emailDuplicate
+                ? 'Email must be unique for each member.'
+                : undefined
+              : 'Enter a valid email address.',
+          phoneNumber:
+            phone && validatePhone(phone)
+              ? phoneDuplicate
+                ? 'Phone number must be unique for each member.'
+                : undefined
+              : 'Enter a valid 10-digit phone number.',
+          rollNumber: rollDuplicate ? 'Roll number must be unique for each member.' : undefined,
+        };
+      }),
     };
 
     setErrors(nextErrors);
 
-    const hasErrors = Boolean(nextErrors.teamName) || nextErrors.members.some((m) => m.email || m.phoneNumber);
+    const hasErrors =
+      Boolean(nextErrors.teamName) ||
+      nextErrors.members.some((m) => m.email || m.phoneNumber || m.rollNumber);
     if (!hasErrors && validateDetails()) {
       onNext();
     }
@@ -587,9 +618,28 @@ const DetailsForm = ({
                 type="text"
                 value={member.rollNumber}
                 onChange={(e) => updateTeamMember(index, 'rollNumber', e.target.value)}
-                className="w-full px-4 py-2 bg-background border border-primary/30 rounded-lg focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 text-foreground"
+                onBlur={() => {
+                  const roll = member.rollNumber.trim().toLowerCase();
+                  const duplicates = teamMembers
+                    .map((m) => m.rollNumber.trim().toLowerCase())
+                    .filter(Boolean)
+                    .filter((r) => r === roll).length;
+                  setMemberError(
+                    index,
+                    'rollNumber',
+                    roll && duplicates > 1 ? 'Roll number must be unique for each member.' : undefined,
+                  );
+                }}
+                className={`w-full px-4 py-2 bg-background border rounded-lg focus:outline-none focus:ring-2 text-foreground ${
+                  errors.members[index]?.rollNumber
+                    ? 'border-red-500/60 focus:ring-red-500/20'
+                    : 'border-primary/30 focus:border-primary focus:ring-primary/20'
+                }`}
                 placeholder="Enter roll number"
               />
+              {errors.members[index]?.rollNumber && (
+                <p className="mt-2 text-sm text-red-400">{errors.members[index]?.rollNumber}</p>
+              )}
             </div>
 
             {/* College Type */}
