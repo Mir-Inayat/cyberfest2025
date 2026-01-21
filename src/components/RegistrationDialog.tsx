@@ -72,12 +72,12 @@ const RegistrationDialog = ({ isOpen, onClose }: RegistrationDialogProps) => {
       .fill(null)
       .map(() => ({
         name: '',
-        college: '',
+        college: 'CBIT',
         collegeType: 'CBIT',
         customCollege: '',
         degreeType: 'B.Tech',
         customDegree: '',
-        degree: '',
+        degree: 'B.Tech',
         yearOfStudy: '',
         branch: '',
         branchType: 'Listed',
@@ -90,9 +90,11 @@ const RegistrationDialog = ({ isOpen, onClose }: RegistrationDialogProps) => {
   };
 
   const updateTeamMember = (index: number, field: keyof TeamMember, value: string) => {
-    const updated = [...teamMembers];
-    updated[index] = { ...updated[index], [field]: value };
-    setTeamMembers(updated);
+    setTeamMembers((prev) => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], [field]: value };
+      return updated;
+    });
   };
 
   const validateDetails = () => {
@@ -425,6 +427,51 @@ const DetailsForm = ({
   onBack: () => void;
   validateDetails: () => boolean;
 }) => {
+  const [errors, setErrors] = useState<{
+    teamName?: string;
+    members: Array<{ email?: string; phoneNumber?: string }>;
+  }>({
+    members: teamMembers.map(() => ({})),
+  });
+
+  useEffect(() => {
+    setErrors((prev) => ({
+      ...prev,
+      members: teamMembers.map((_, index) => prev.members[index] || {}),
+    }));
+  }, [teamMembers.length]);
+
+  const validateEmail = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+  const validatePhone = (phone: string) => /^\d{10}$/.test(phone.replace(/\D/g, ''));
+
+  const setMemberError = (index: number, field: 'email' | 'phoneNumber', message?: string) => {
+    setErrors((prev) => ({
+      ...prev,
+      members: prev.members.map((memberErrors, i) =>
+        i === index ? { ...memberErrors, [field]: message } : memberErrors,
+      ),
+    }));
+  };
+
+  const handleNext = () => {
+    const nextErrors = {
+      teamName: teamName.trim() ? undefined : 'Team name is required.',
+      members: teamMembers.map((member) => ({
+        email: member.email && validateEmail(member.email) ? undefined : 'Enter a valid email address.',
+        phoneNumber: member.phoneNumber && validatePhone(member.phoneNumber)
+          ? undefined
+          : 'Enter a valid 10-digit phone number.',
+      })),
+    };
+
+    setErrors(nextErrors);
+
+    const hasErrors = Boolean(nextErrors.teamName) || nextErrors.members.some((m) => m.email || m.phoneNumber);
+    if (!hasErrors && validateDetails()) {
+      onNext();
+    }
+  };
+
   return (
     <div className="space-y-6">
       <div className="text-center mb-8">
@@ -443,9 +490,14 @@ const DetailsForm = ({
           type="text"
           value={teamName}
           onChange={(e) => setTeamName(e.target.value)}
-          className="w-full px-4 py-2 bg-background border border-primary/30 rounded-lg focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 text-foreground"
+          className={`w-full px-4 py-2 bg-background border rounded-lg focus:outline-none focus:ring-2 text-foreground ${
+            errors.teamName ? 'border-red-500/60 focus:ring-red-500/20' : 'border-primary/30 focus:border-primary focus:ring-primary/20'
+          }`}
           placeholder="Enter your team name"
         />
+        {errors.teamName && (
+          <p className="mt-2 text-sm text-red-400">{errors.teamName}</p>
+        )}
       </div>
 
       {teamMembers.map((member, index) => (
@@ -481,9 +533,20 @@ const DetailsForm = ({
                 type="email"
                 value={member.email}
                 onChange={(e) => updateTeamMember(index, 'email', e.target.value)}
-                className="w-full px-4 py-2 bg-background border border-primary/30 rounded-lg focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 text-foreground"
+                onBlur={(e) => {
+                  const value = e.target.value;
+                  setMemberError(index, 'email', value && validateEmail(value) ? undefined : 'Enter a valid email address.');
+                }}
+                className={`w-full px-4 py-2 bg-background border rounded-lg focus:outline-none focus:ring-2 text-foreground ${
+                  errors.members[index]?.email
+                    ? 'border-red-500/60 focus:ring-red-500/20'
+                    : 'border-primary/30 focus:border-primary focus:ring-primary/20'
+                }`}
                 placeholder="Enter email"
               />
+              {errors.members[index]?.email && (
+                <p className="mt-2 text-sm text-red-400">{errors.members[index]?.email}</p>
+              )}
             </div>
 
             {/* Phone Number */}
@@ -495,9 +558,24 @@ const DetailsForm = ({
                 type="tel"
                 value={member.phoneNumber}
                 onChange={(e) => updateTeamMember(index, 'phoneNumber', e.target.value)}
-                className="w-full px-4 py-2 bg-background border border-primary/30 rounded-lg focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 text-foreground"
+                onBlur={(e) => {
+                  const value = e.target.value;
+                  setMemberError(
+                    index,
+                    'phoneNumber',
+                    value && validatePhone(value) ? undefined : 'Enter a valid 10-digit phone number.',
+                  );
+                }}
+                className={`w-full px-4 py-2 bg-background border rounded-lg focus:outline-none focus:ring-2 text-foreground ${
+                  errors.members[index]?.phoneNumber
+                    ? 'border-red-500/60 focus:ring-red-500/20'
+                    : 'border-primary/30 focus:border-primary focus:ring-primary/20'
+                }`}
                 placeholder="Enter phone number"
               />
+              {errors.members[index]?.phoneNumber && (
+                <p className="mt-2 text-sm text-red-400">{errors.members[index]?.phoneNumber}</p>
+              )}
             </div>
 
             {/* Roll Number */}
@@ -640,13 +718,17 @@ const DetailsForm = ({
                 value={member.branch}
                 onChange={(e) => {
                   const selectedBranch = e.target.value;
-                  const updated = [...teamMembers];
-                  updated[index] = {
-                    ...updated[index],
-                    branch: selectedBranch,
-                    customBranch: selectedBranch !== 'Other' ? '' : updated[index].customBranch
-                  };
-                  setTeamMembers(updated);
+                  setTeamMembers((prev) =>
+                    prev.map((member, i) =>
+                      i === index
+                        ? {
+                            ...member,
+                            branch: selectedBranch,
+                            customBranch: selectedBranch !== 'Other' ? '' : member.customBranch,
+                          }
+                        : member,
+                    ),
+                  );
                 }}
                 className="w-full px-4 py-2 bg-background border border-primary/30 rounded-lg focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 text-foreground"
               >
@@ -684,7 +766,7 @@ const DetailsForm = ({
         </Button>
         <Button
           variant="cyber"
-          onClick={onNext}
+          onClick={handleNext}
           disabled={!validateDetails()}
           className="w-full sm:w-auto disabled:opacity-50 disabled:cursor-not-allowed"
         >
