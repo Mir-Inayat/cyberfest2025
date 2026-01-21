@@ -12,11 +12,13 @@ import RegistrationDialog from '@/components/RegistrationDialog';
 // import CyberBackground from '@/components/CyberBackground';
 import IntroVideo from '@/components/video/IntroVideo';
 import ContinuousBackground from '@/components/ContinuousBackground';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 const Index = () => {
   const [introVideoEnded, setIntroVideoEnded] = useState(false);
   const [isFading, setIsFading] = useState(false);
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
+  const isMobile = useIsMobile();
 
   const handleVideoEnd = useCallback(() => {
     setIsFading(true);
@@ -28,8 +30,8 @@ const Index = () => {
   return (
     <div className="relative min-h-screen bg-background text-foreground overflow-x-hidden">
       <ContinuousBackground />
-      {/* Intro Video */}
-      {!introVideoEnded && (
+      {/* Intro Video - Hidden on mobile */}
+      {!introVideoEnded && !isMobile && (
         <div className={`fixed inset-0 z-50 transition-opacity duration-1000 ease-in-out ${isFading ? 'opacity-0' : 'opacity-100'}`}>
           <IntroVideo
             videoSrc={"/intro-video.mp4"}
@@ -39,7 +41,7 @@ const Index = () => {
       )}
 
       {/* Navigation */}
-      <Navbar showAfterIntro={introVideoEnded} />
+      <Navbar showAfterIntro={introVideoEnded || isMobile} />
 
       {/* Main Content */}
       <main className="relative z-10">

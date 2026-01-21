@@ -1,12 +1,12 @@
 import { motion } from 'framer-motion';
 import { useInView } from 'framer-motion';
 import { useRef } from 'react';
-import { Shield, Users, Clock, Trophy } from 'lucide-react';
+import { Shield, Clock, Trophy, Award } from 'lucide-react';
 
 const stats = [
   { icon: Clock, value: '36', label: 'Hours Non-Stop', color: 'text-primary' },
-  { icon: Users, value: '400+', label: 'Participants Expected', color: 'text-secondary' },
-  { icon: Trophy, value: '2', label: 'Parallel Tracks', color: 'text-accent' },
+  { icon: Trophy, value: '75,000', label: 'Prize Pool', color: 'text-secondary' },
+  { icon: Award, value: '2', label: 'Parallel Tracks', color: 'text-accent' },
   { icon: Shield, value: 'National', label: 'Level Event', color: 'text-primary' },
 ];
 

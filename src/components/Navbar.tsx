@@ -9,8 +9,6 @@ const navItems = [
   { name: 'Home', href: '#home' },
   { name: 'About', href: '#about' },
   { name: 'Events', href: '#events' },
-  { name: 'Hackathon', href: '#hackathon' },
-  { name: 'CTF', href: '#ctf' },
   { name: 'Schedule', href: '#schedule' },
   { name: 'Venue', href: '#venue' },
   { name: 'Sponsors', href: '#sponsors' },

@@ -4,7 +4,7 @@ import { useRef } from 'react';
 import { MapPin, Building, Monitor, Cpu } from 'lucide-react';
 
 const venues = [
-  { name: 'Assembly Hall', icon: Building, description: 'Main ceremonies & panel talks' },
+  { name: 'Open Air Auditorium', icon: Building, description: 'Main ceremonies & panel talks' },
   { name: 'TPO Labs', icon: Monitor, description: 'Hackathon venue' },
   { name: 'IT Labs', icon: Cpu, description: 'CTF challenges' },
 ];
