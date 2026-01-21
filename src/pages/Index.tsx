@@ -7,6 +7,7 @@ import ExpertSessionsSection from '@/components/ExpertSessionsSection';
 import ScheduleSection from '@/components/ScheduleSection';
 import VenueSection from '@/components/VenueSection';
 import SponsorsSection from '@/components/SponsorsSection';
+import FAQSection from '@/components/FAQSection';
 import Footer from '@/components/Footer';
 import RegistrationDialog from '@/components/RegistrationDialog';
 // import CyberBackground from '@/components/CyberBackground';
@@ -52,6 +53,7 @@ const Index = () => {
         <ScheduleSection />
         <VenueSection />
         <SponsorsSection />
+        <FAQSection />
       </main>
 
       {/* Registration Dialog */}

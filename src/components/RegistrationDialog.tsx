@@ -52,6 +52,7 @@ const RegistrationDialog = ({ isOpen, onClose }: RegistrationDialogProps) => {
   const [step, setStep] = useState<Step>('event-selection');
   const [eventType, setEventType] = useState<EventType>(null);
   const [teamSize, setTeamSize] = useState<number | null>(null);
+  const [teamName, setTeamName] = useState('');
   const [teamMembers, setTeamMembers] = useState<TeamMember[]>([]);
   const [paymentScreenshot, setPaymentScreenshot] = useState<File | null>(null);
   const [transactionId, setTransactionId] = useState('');
@@ -95,7 +96,7 @@ const RegistrationDialog = ({ isOpen, onClose }: RegistrationDialogProps) => {
   };
 
   const validateDetails = () => {
-    return teamMembers.every(
+    return teamName.trim() !== '' && teamMembers.every(
       (member) =>
         member.name &&
         member.email &&
@@ -128,6 +129,7 @@ const RegistrationDialog = ({ isOpen, onClose }: RegistrationDialogProps) => {
       await addDoc(collection(db, 'registrations'), {
         eventType,
         teamSize,
+        teamName,
         teamMembers,
         price: getPrice(),
         transactionId,
@@ -149,6 +151,7 @@ const RegistrationDialog = ({ isOpen, onClose }: RegistrationDialogProps) => {
     setStep('event-selection');
     setEventType(null);
     setTeamSize(null);
+    setTeamName('');
     setTeamMembers([]);
     setPaymentScreenshot(null);
     setTransactionId('');
@@ -241,6 +244,8 @@ const RegistrationDialog = ({ isOpen, onClose }: RegistrationDialogProps) => {
 
             {step === 'details' && (
               <DetailsForm
+                teamName={teamName}
+                setTeamName={setTeamName}
                 teamMembers={teamMembers}
                 setTeamMembers={setTeamMembers}
                 updateTeamMember={updateTeamMember}
@@ -398,6 +403,8 @@ const TeamSizeSelection = ({
 
 // Details Form Component
 const DetailsForm = ({
+  teamName,
+  setTeamName,
   teamMembers,
   setTeamMembers,
   updateTeamMember,
@@ -405,6 +412,8 @@ const DetailsForm = ({
   onBack,
   validateDetails,
 }: {
+  teamName: string;
+  setTeamName: (name: string) => void;
   teamMembers: TeamMember[];
   setTeamMembers: (members: TeamMember[]) => void;
   updateTeamMember: (index: number, field: keyof TeamMember, value: string) => void;
@@ -419,6 +428,20 @@ const DetailsForm = ({
           Team Member Details
         </h3>
         <p className="text-foreground/60">Fill in the details for each team member</p>
+      </div>
+
+      {/* Team Name Field */}
+      <div className="p-6 bg-gradient-to-br from-primary/10 to-transparent border-2 border-primary/30 rounded-lg">
+        <label className="block text-sm font-medium text-foreground mb-2">
+          Team Name *
+        </label>
+        <input
+          type="text"
+          value={teamName}
+          onChange={(e) => setTeamName(e.target.value)}
+          className="w-full px-4 py-2 bg-background border border-primary/30 rounded-lg focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 text-foreground"
+          placeholder="Enter your team name"
+        />
       </div>
 
       {teamMembers.map((member, index) => (
@@ -495,9 +518,13 @@ const DetailsForm = ({
               <select
                 value={member.collegeType}
                 onChange={(e) => {
-                  updateTeamMember(index, 'collegeType', e.target.value);
-                  if (e.target.value === 'CBIT') {
+                  const newCollegeType = e.target.value;
+                  updateTeamMember(index, 'collegeType', newCollegeType);
+                  if (newCollegeType === 'CBIT') {
                     updateTeamMember(index, 'college', 'CBIT');
+                    updateTeamMember(index, 'customCollege', '');
+                  } else {
+                    updateTeamMember(index, 'college', '');
                   }
                 }}
                 className="w-full px-4 py-2 bg-background border border-primary/30 rounded-lg focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 text-foreground"
@@ -534,9 +561,13 @@ const DetailsForm = ({
               <select
                 value={member.degreeType}
                 onChange={(e) => {
-                  updateTeamMember(index, 'degreeType', e.target.value);
-                  if (e.target.value !== 'Other') {
-                    updateTeamMember(index, 'degree', e.target.value);
+                  const newDegreeType = e.target.value;
+                  updateTeamMember(index, 'degreeType', newDegreeType);
+                  if (newDegreeType !== 'Other') {
+                    updateTeamMember(index, 'degree', newDegreeType);
+                    updateTeamMember(index, 'customDegree', '');
+                  } else {
+                    updateTeamMember(index, 'degree', '');
                   }
                 }}
                 className="w-full px-4 py-2 bg-background border border-primary/30 rounded-lg focus:border-primary focus:outline-none focus:ring-2 focus:ring-primary/20 text-foreground"
