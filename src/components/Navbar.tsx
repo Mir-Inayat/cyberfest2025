@@ -36,6 +36,22 @@ const Navbar = ({ showAfterIntro = true }: NavbarProps) => {
   const shouldShowNavbar = showAfterIntro;
   const isFilled = isScrolled || isMobileMenuOpen;
 
+  const handleMobileNavClick = (href: string) => {
+    setIsMobileMenuOpen(false);
+    const targetId = href.replace('#', '');
+    const target = document.getElementById(targetId);
+
+    requestAnimationFrame(() => {
+      if (target) {
+        const navOffset = 72;
+        const top = target.getBoundingClientRect().top + window.scrollY - navOffset;
+        window.scrollTo({ top, behavior: 'smooth' });
+      } else {
+        window.location.hash = href;
+      }
+    });
+  };
+
   return (
     <motion.nav
       initial={{ y: -100, opacity: 0 }}
@@ -96,7 +112,10 @@ const Navbar = ({ showAfterIntro = true }: NavbarProps) => {
                 <a
                   key={item.name}
                   href={item.href}
-                  onClick={() => setIsMobileMenuOpen(false)}
+                  onClick={(event) => {
+                    event.preventDefault();
+                    handleMobileNavClick(item.href);
+                  }}
                   className="block font-rajdhani text-lg font-medium text-foreground/80 hover:text-primary transition-colors"
                 >
                   {item.name}
