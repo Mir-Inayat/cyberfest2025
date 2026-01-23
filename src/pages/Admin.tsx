@@ -47,6 +47,10 @@ const Admin = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [eventFilter, setEventFilter] = useState<'all' | 'hackathon' | 'ctf'>('all');
   const [selectedRegistration, setSelectedRegistration] = useState<Registration | null>(null);
+  const [refreshCooldown, setRefreshCooldown] = useState(0);
+  const [lastRefreshTime, setLastRefreshTime] = useState<number | null>(null);
+
+  const COOLDOWN_DURATION = 5 * 60 * 1000; // 5 minutes in milliseconds
 
   // Check authentication on mount
   useEffect(() => {
@@ -54,7 +58,37 @@ const Admin = () => {
     if (!authToken) {
       navigate('/regdata');
     }
+    
+    // Check if there's a saved last refresh time
+    const savedLastRefresh = localStorage.getItem('lastRefreshTime');
+    if (savedLastRefresh) {
+      const lastRefresh = parseInt(savedLastRefresh);
+      const now = Date.now();
+      const timeSinceLastRefresh = now - lastRefresh;
+      
+      if (timeSinceLastRefresh < COOLDOWN_DURATION) {
+        setLastRefreshTime(lastRefresh);
+        setRefreshCooldown(Math.ceil((COOLDOWN_DURATION - timeSinceLastRefresh) / 1000));
+      }
+    }
   }, [navigate]);
+
+  // Cooldown timer effect
+  useEffect(() => {
+    if (refreshCooldown > 0) {
+      const timer = setInterval(() => {
+        setRefreshCooldown(prev => {
+          if (prev <= 1) {
+            setLastRefreshTime(null);
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+      
+      return () => clearInterval(timer);
+    }
+  }, [refreshCooldown]);
 
   const handleLogout = () => {
     sessionStorage.removeItem('admin_auth');
@@ -62,6 +96,11 @@ const Admin = () => {
   };
 
   const fetchRegistrations = async () => {
+    // Check if cooldown is active
+    if (refreshCooldown > 0) {
+      return;
+    }
+    
     setLoading(true);
     try {
       const querySnapshot = await getDocs(collection(db, 'registrations'));
@@ -74,6 +113,12 @@ const Admin = () => {
       data.sort((a, b) => new Date(b.timestamp).getTime() - new Date(a.timestamp).getTime());
       
       setRegistrations(data);
+      
+      // Set cooldown after successful fetch
+      const now = Date.now();
+      setLastRefreshTime(now);
+      localStorage.setItem('lastRefreshTime', now.toString());
+      setRefreshCooldown(COOLDOWN_DURATION / 1000); // Convert to seconds
     } catch (error) {
       console.error('Error fetching registrations:', error);
       alert('Failed to fetch registrations. Please check your Firebase connection.');
@@ -224,11 +269,16 @@ const Admin = () => {
               {/* Refresh Button */}
               <Button 
                 onClick={fetchRegistrations}
-                disabled={loading}
-                className="bg-purple-600 hover:bg-purple-700"
+                disabled={loading || refreshCooldown > 0}
+                className="bg-purple-600 hover:bg-purple-700 disabled:opacity-50 disabled:cursor-not-allowed"
+                title={refreshCooldown > 0 ? `Available in ${Math.floor(refreshCooldown / 60)}:${String(refreshCooldown % 60).padStart(2, '0')}` : 'Refresh data'}
               >
                 <RefreshCw className={`mr-2 h-4 w-4 ${loading ? 'animate-spin' : ''}`} />
-                {loading ? 'Loading...' : 'Refresh Data'}
+                {loading 
+                  ? 'Loading...' 
+                  : refreshCooldown > 0 
+                    ? `Wait ${Math.floor(refreshCooldown / 60)}:${String(refreshCooldown % 60).padStart(2, '0')}`
+                    : 'Refresh Data'}
               </Button>
 
               {/* Search */}
