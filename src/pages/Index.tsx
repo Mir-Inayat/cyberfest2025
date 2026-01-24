@@ -15,6 +15,7 @@ import RegistrationDialog from '@/components/RegistrationDialog';
 // import CyberBackground from '@/components/CyberBackground';
 import Plasma from '@/components/Plasma';
 import { useIsMobile } from '@/hooks/use-mobile';
+import CommitteeSection from '@/components/CommitteeSection';
 
 const Index = () => {
   const [isRegistrationOpen, setIsRegistrationOpen] = useState(false);
@@ -52,6 +53,7 @@ const Index = () => {
         <CTFSection />
         <ExpertSessionsSection />
         <ScheduleSection />
+        <CommitteeSection />
         <VenueSection />
         <FAQSection />
         <SponsorsSection />
