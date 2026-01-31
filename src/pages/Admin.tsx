@@ -200,11 +200,25 @@ const Admin = () => {
   };
 
   const getTotalRevenue = () => {
-    return filteredRegistrations.reduce((sum, reg) => sum + reg.price, 0);
+    return filteredRegistrations
+      .filter(reg => reg.isValid !== false)
+      .reduce((sum, reg) => sum + reg.price, 0);
   };
 
   const getTotalParticipants = () => {
     return filteredRegistrations.reduce((sum, reg) => sum + reg.teamMembers.length, 0);
+  };
+
+  const getRejectedParticipants = () => {
+    return filteredRegistrations
+      .filter(reg => reg.isValid === false)
+      .reduce((sum, reg) => sum + reg.teamMembers.length, 0);
+  };
+
+  const getValidParticipants = () => {
+    return filteredRegistrations
+      .filter(reg => reg.isValid !== false)
+      .reduce((sum, reg) => sum + reg.teamMembers.length, 0);
   };
 
   const getConfirmedCount = () => {
@@ -363,7 +377,17 @@ const Admin = () => {
               <CardTitle className="text-sm font-medium text-gray-400">Total Participants</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold text-purple-400">{getTotalParticipants()}</div>
+              {getRejectedParticipants() > 0 ? (
+                <div className="flex items-center gap-2">
+                  <span className="text-lg font-bold text-gray-400 line-through">{getTotalParticipants()}</span>
+                  <span className="text-lg font-bold text-gray-400">-</span>
+                  <span className="text-lg font-bold text-red-400">{getRejectedParticipants()}</span>
+                  <span className="text-lg font-bold text-gray-400">=</span>
+                  <span className="text-2xl font-bold text-purple-400">{getValidParticipants()}</span>
+                </div>
+              ) : (
+                <div className="text-2xl font-bold text-purple-400">{getTotalParticipants()}</div>
+              )}
             </CardContent>
           </Card>
           
